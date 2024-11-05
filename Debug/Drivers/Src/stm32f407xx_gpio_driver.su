@@ -1,0 +1,10 @@
+../Drivers/Src/stm32f407xx_gpio_driver.c:23:6:GPIO_ClockControl	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:80:6:GPIO_Init	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:94:6:GPIO_DeInit	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:108:9:GPIO_ReadFromInputPin	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:123:10:GPIO_ReadFromInputPort	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:138:6:GPIO_WriteToOutputPin	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:153:6:GPIO_WriteToOutputPort	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:167:6:GPIO_TogglePin	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:181:6:GPIO_IRQConfig	16	static
+../Drivers/Src/stm32f407xx_gpio_driver.c:195:6:GPIO_IRQHandling	16	static

@@ -12,6 +12,37 @@
 
 #define __vo volatile
 
+/*
+ * PROCESSOR SPECIFIC MACROS
+ * ARM CORTEX MX PROCESSOR NVIC_ISERx BASE ADDRESSES
+ *
+ * */
+#define NVIC_ISER0  ((uint32_t *)0xE000E100)
+#define NVIC_ISER1  (uint32_t *)0xE000E104
+#define NVIC_ISER2  (uint32_t *)0xE000E108
+#define NVIC_ISER3  (uint32_t *)0xE000E10C
+#define NVIC_ISER4  (uint32_t *)0xE000E110
+/*
+ *
+ * ARM CORTEX MX PROCESSOR NVIC_ISERx BASE ADDRESSES
+ *
+ * */
+
+#define NVIC_ICER0  (uint32_t *)0xE000E180
+#define NVIC_ICER1  (uint32_t *)0xE000E184
+#define NVIC_ICER2  (uint32_t *)0xE000E188
+#define NVIC_ICER3  (uint32_t *)0xE000E18C
+#define NVIC_ICER4  (uint32_t *)0xE000E190
+/*
+ *
+ * ARM CORTEX MX PROCESSOR NVIC priority register BASE ADDRESSES
+ *
+ * */
+#define NVIC_IPR  (uint32_t *)0xE000E400
+
+
+
+#define NO_PR_BITS_IMPLEMENTED     4
 
 /*
  *
@@ -123,6 +154,13 @@
 
 
 #define RCC   ((RCC_RegDef_t *)RCC_BASEADDR)
+
+#define EXTI   ((EXTI_RegDef_t *)EXTI_BASEADDR)
+
+#define SYSCFG   ((SYSCFG_RegDef_t *)SYSCFG_BASEADDR)
+
+
+
 
 
 
@@ -266,6 +304,24 @@
 
 /*
  *
+ * vector table MACROS for EXTI IRQ NUMBERS
+ *
+ * */
+
+#define EXTI_NO_0            6
+#define EXTI_NO_1            7
+#define EXTI_NO_2            8
+#define EXTI_NO_3            9
+#define EXTI_NO_4           10
+#define EXTI_NO_9_TO_5      23
+#define EXTI_NO_10_TO_15    40
+
+
+
+
+
+/*
+ *
  * PERIPHERAL REGISTER DEFINITION STRUCTURES
  *
  *
@@ -330,6 +386,27 @@ typedef struct{
 	__vo uint32_t DCKCFGR;
 
 }RCC_RegDef_t;
+
+
+typedef struct{
+	__vo uint32_t IMR;
+	__vo uint32_t EMR;
+	__vo uint32_t RTSR;
+	__vo uint32_t FTSR;
+	__vo uint32_t SWIER;
+	__vo uint32_t PR;
+}EXTI_RegDef_t;
+
+typedef struct{
+	__vo uint32_t MEMRMP;
+	__vo uint32_t PMC;
+	__vo uint32_t EXTICR[4];
+     uint32_t RESERVED[2];
+	__vo uint32_t CMPCR;
+}SYSCFG_RegDef_t;
+
+
+
 
 
 #endif /* INC_STM32F407XX_H_ */

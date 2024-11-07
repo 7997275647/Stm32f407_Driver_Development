@@ -88,6 +88,49 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
 		pGPIOHandle->pGPIOx->MODER = pGPIOHandle->pGPIOx->MODER | temp;  //setting bit positions according to the pin mode
 
 	} else {
+		if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT){
+			//1. Configure FTSR
+			EXTI->FTSR |= (1<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);    //SET FTSR FOR GIVEN PIN
+			EXTI->RTSR &= ~(1<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);   // CLEAR RTSR
+		}
+		else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT){
+			//1. Configure RTSR
+			EXTI->RTSR |= (1<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);    //SET RTSR
+			EXTI->FTSR &= ~(1<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);    // CLEAR FTSR
+		}
+		else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT){
+			//1. Configure RTSR and FTSR
+			EXTI->FTSR |= (1<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);  // SET BOTH RTSR AND FTSR
+			EXTI->RTSR |= (1<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}
+
+		// 2. Configure the gpio port selection using SYSCFG_EXTICR
+		uint8_t temp1,temp2 =0;
+		temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber/4;
+		temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber%4;
+		SYSCFG_CLK_EN();
+		if (pGPIOHandle->pGPIOx == GPIOA) {
+			SYSCFG->EXTICR[temp1] |= (0x00<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOB) {
+			SYSCFG->EXTICR[temp1] |= (0x01<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOC) {
+			SYSCFG->EXTICR[temp1] |= (0x02<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOD) {
+			SYSCFG->EXTICR[temp1] |= (0x03<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOE) {
+			SYSCFG->EXTICR[temp1] |= (0x04<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOF) {
+			SYSCFG->EXTICR[temp1] |= (0x05<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOG) {
+			SYSCFG->EXTICR[temp1] |= (0x06<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOH) {
+			SYSCFG->EXTICR[temp1] |= (0x07<<(temp2*4));
+		} else if (pGPIOHandle->pGPIOx == GPIOI) {
+			SYSCFG->EXTICR[temp1] |= (0x08<<(temp2*4));
+		}
+
+		// 3. enable interrupt delivery using IMR
+		EXTI->IMR |= (1<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 
 	}
 
@@ -270,8 +313,56 @@ void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber) {
  *
  * @Note:
  **********************************************************************************************************/
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi) {
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi) {
+	if (EnorDi == ENABLE) {
+		if (IRQNumber <= 31) {
+			// configure NVICs ISER0 register
+			*NVIC_ISER0 |= (1 << IRQNumber);
+		} else if (IRQNumber > 31 || IRQNumber <= 63) {
+			// configure NVICs ISER1 register
 
+			*NVIC_ISER1 |= (1 << IRQNumber % 32);
+		} else if (IRQNumber > 63 || IRQNumber <= 95) {
+			// configure NVICs ISER2 register
+			*NVIC_ISER2 |= (1 << IRQNumber % 64);
+		}
+	}
+	else{
+		if (IRQNumber <= 31) {
+			// configure NVICs ICER0 register
+			*NVIC_ICER0 |= (1<< IRQNumber);
+
+		} else if (IRQNumber > 31 || IRQNumber <= 63) {
+			// configure NVICs ICER1 register
+			*NVIC_ICER1 |= (1<< IRQNumber%32);
+
+		} else if (IRQNumber > 63 || IRQNumber <= 95) {
+			// configure NVICs ICER2 register
+			*NVIC_ICER2 |= (1<< IRQNumber%64);
+
+		}
+
+	}
+
+}
+/**********************************************************************************************************
+ * @fn : GPIO_IRQPriorityConfig
+ * @brief :
+ * @param[1]:
+ * @param[2]:
+ * @param[3]:
+ *
+ * @return :
+ *
+ * @Note:
+ **********************************************************************************************************/
+
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint8_t IRQPriority){
+	//find out IPR register
+	uint8_t iprx = IRQNumber/4;
+	uint8_t iprx_section  = IRQNumber%4;
+	uint8_t shift_amount = (8*iprx_section) + (8 -NO_PR_BITS_IMPLEMENTED);
+	* (NVIC_IPR + (iprx*4)) |= (IRQPriority << shift_amount);
 }
 /**********************************************************************************************************
  * @fn : GPIO_IRQHandling

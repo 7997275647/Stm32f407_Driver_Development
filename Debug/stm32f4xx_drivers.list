@@ -31,23 +31,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  13 .comment      00000043  00000000  00000000  00010b80  2**0
                   CONTENTS, READONLY
- 14 .debug_info   00000a33  00000000  00000000  00010bc3  2**0
+ 14 .debug_info   00000a4e  00000000  00000000  00010bc3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_abbrev 0000031f  00000000  00000000  000115f6  2**0
+ 15 .debug_abbrev 00000321  00000000  00000000  00011611  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_aranges 000000c8  00000000  00000000  00011918  2**3
+ 16 .debug_aranges 000000c8  00000000  00000000  00011938  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_rnglists 0000008c  00000000  00000000  000119e0  2**0
+ 17 .debug_rnglists 0000008c  00000000  00000000  00011a00  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_macro  000018cb  00000000  00000000  00011a6c  2**0
+ 18 .debug_macro  0000233e  00000000  00000000  00011a8c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_line   00000f63  00000000  00000000  00013337  2**0
+ 19 .debug_line   000010c4  00000000  00000000  00013dca  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_str    000055e0  00000000  00000000  0001429a  2**0
+ 20 .debug_str    00008aa5  00000000  00000000  00014e8e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_frame  00000288  00000000  00000000  0001987c  2**2
+ 21 .debug_frame  00000288  00000000  00000000  0001d934  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000068  00000000  00000000  00019b04  2**0
+ 22 .debug_line_str 00000068  00000000  00000000  0001dbbc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1155,9 +1155,9 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint8_t IRQPriority){
  8000936:	b2db      	uxtb	r3, r3
  8000938:	3304      	adds	r3, #4
  800093a:	737b      	strb	r3, [r7, #13]
-	* (NVIC_IPR + (iprx*4)) |= (IRQPriority << shift_amount);
+	* (NVIC_IPR + (iprx)) |= (IRQPriority << shift_amount);
  800093c:	7bfb      	ldrb	r3, [r7, #15]
- 800093e:	011b      	lsls	r3, r3, #4
+ 800093e:	009b      	lsls	r3, r3, #2
  8000940:	f103 4360 	add.w	r3, r3, #3758096384	; 0xe0000000
  8000944:	f503 4364 	add.w	r3, r3, #58368	; 0xe400
  8000948:	681a      	ldr	r2, [r3, #0]
@@ -1166,7 +1166,7 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint8_t IRQPriority){
  800094e:	fa01 f303 	lsl.w	r3, r1, r3
  8000952:	4619      	mov	r1, r3
  8000954:	7bfb      	ldrb	r3, [r7, #15]
- 8000956:	011b      	lsls	r3, r3, #4
+ 8000956:	009b      	lsls	r3, r3, #2
  8000958:	f103 4360 	add.w	r3, r3, #3758096384	; 0xe0000000
  800095c:	f503 4364 	add.w	r3, r3, #58368	; 0xe400
  8000960:	430a      	orrs	r2, r1

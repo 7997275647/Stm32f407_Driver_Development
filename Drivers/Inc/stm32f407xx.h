@@ -129,9 +129,10 @@
 
 #define USART1_BASEADDR       (APB2_BASEADDR+0x1000)     //USART1 BASE ADDR
 #define USART6_BASEADDR       (APB2_BASEADDR+0x1400)     //USART1 BASE ADDR
-#define SPI1_BASEADDR         (APB2_BASEADDR+0x3000)     //USART1 BASE ADDR
+#define SPI1_BASEADDR         (APB2_BASEADDR+0x3000)     //SPI1 BASE ADDR
 #define EXTI_BASEADDR         (APB2_BASEADDR+0x3C00)     //USART1 BASE ADDR
 #define SYSCFG_BASEADDR       (APB2_BASEADDR+0x3800)     //USART1 BASE ADDR
+#define SPI4_BASEADDR         (APB2_BASEADDR+0x3400)     //SPI4 BASE ADDR
 
 
 
@@ -158,6 +159,12 @@
 #define EXTI   ((EXTI_RegDef_t *)EXTI_BASEADDR)
 
 #define SYSCFG   ((SYSCFG_RegDef_t *)SYSCFG_BASEADDR)
+
+
+#define SPI1 ((SPI_RegDef_t *)SPI1_BASEADDR)
+#define SPI2 ((SPI_RegDef_t *)SPI2_BASEADDR)
+#define SPI3 ((SPI_RegDef_t *)SPI3_BASEADDR)
+#define SPI4 ((SPI_RegDef_t *)SPI4_BASEADDR)
 
 
 
@@ -425,6 +432,18 @@ typedef struct{
 	__vo uint32_t CMPCR;
 }SYSCFG_RegDef_t;
 
+typedef struct{
+	__vo uint32_t CR1;
+	__vo uint32_t CR2;
+	__vo uint32_t SR;
+	__vo uint32_t DR;
+	__vo uint32_t CRCPR;
+	__vo uint32_t RXCRCR;
+	__vo uint32_t TXCRCR;
+	__vo uint32_t I2SCFGR;
+	__vo uint32_t I2SPR;
+
+}SPI_RegDef_t;
 
 
 

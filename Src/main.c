@@ -24,16 +24,21 @@
 
 
 void delay(){
-	for (uint32_t i = 0; i<500000; i++){
+	for (uint32_t i = 0; i<500000/2; i++){
 
 	}
 }
 
-
+void EXTI0_IRQHandler(){
+	delay();
+	GPIO_IRQHandling(GPIO_PIN_NO_0);
+	GPIO_TogglePin(GPIOD,GPIO_PIN_NO_12);
+}
 
 int main(void)
 {
 	GPIO_Handle_t GPIOLed;
+	memset(&GPIOLed, 0 , sizeof(GPIOLed));
 	GPIOLed.pGPIOx = GPIOD;
 	GPIOLed.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_12;
 	GPIOLed.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
@@ -42,9 +47,10 @@ int main(void)
 	GPIOLed.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
 
 	GPIO_Handle_t GPIOBtn;
+	memset(&GPIOBtn, 0 , sizeof(GPIOBtn));
 	GPIOBtn.pGPIOx = GPIOA;
 	GPIOBtn.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
-	GPIOBtn.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	GPIOBtn.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_RT;
 	GPIOBtn.GPIO_PinConfig.GPIO_PinSpeed = GPIO_OP_HIGH_SPEED;
 	//GPIOLed.GPIO_PinConfig.GPIO_PinOType = GPIO_OP_TYPE_PP;
 	GPIOBtn.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
@@ -53,15 +59,13 @@ int main(void)
 	GPIO_ClockControl(GPIOA , ENABLE);
 	GPIO_Init(&GPIOLed);
 	GPIO_Init(&GPIOBtn);
+
+	GPIO_IRQPriorityConfig(EXTI_NO_0, NVIC_PRIO_15);
+	GPIO_IRQInterruptConfig(EXTI_NO_0 , ENABLE);
     /* Loop forever */
-	for(;;){
-		if (GPIO_ReadFromInputPin(GPIOA, 0)== GPIO_PIN_SET){
-		GPIO_WriteToOutputPin(GPIOD, GPIO_PIN_NO_12, GPIO_PIN_SET);
+	while(1){
 
-		}
-		else{
-			GPIO_WriteToOutputPin(GPIOD, GPIO_PIN_NO_12, GPIO_PIN_RESET);
-
-		}
 	}
+
+	return 0;
 }

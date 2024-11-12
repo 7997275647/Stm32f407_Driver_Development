@@ -78,7 +78,9 @@ void GPIO_ClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi) {
  * @Note:
  **********************************************************************************************************/
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
+	GPIO_ClockControl(pGPIOHandle->pGPIOx , ENABLE);
 	uint32_t temp = 0;
+
 
 	// configure mode
 	if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG) {

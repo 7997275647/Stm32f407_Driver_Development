@@ -9,6 +9,7 @@
 #define INC_STM32F407XX_SPI_DRIVER_H_
 
 #include "stm32f407xx.h"
+
 /*@SPI_DEVICEMODES
  * macros of possible modes of a GPIO pin
  */
@@ -60,6 +61,26 @@
  */
 #define SPI_SSM_DI   0
 #define SPI_SSM_EN   1
+/*@SPI_SSM
+ * macros of possible modes of a GPIO pin
+ */
+#define SPI_SSI_DI   0
+#define SPI_SSI_EN   1
+
+
+
+#define SPI_TXE_FLAG            (1 << SPI_SR_TXE)
+#define SPI_RXNE_FLAG           (1 << SPI_SR_RXNE)
+#define SPI_CHSIDE_FLAG         (1 << SPI_SR_CHSIDE)
+#define SPI_UDR_FLAG            (1 << SPI_SR_UDR)
+#define SPI_CRCERR_FLAG         (1 << SPI_SR_CRCERR)
+#define SPI_MODF_FLAG           (1 << SPI_SR_MODF)
+#define SPI_OVR_FLAG            (1 << SPI_SR_OVR)
+#define SPI_BSY_FLAG            (1 << SPI_SR_BSY)
+#define SPI_FRE_FLAG            (1 << SPI_SR_FRE)
+
+
+
 
 typedef struct{
 
@@ -70,6 +91,7 @@ typedef struct{
 	uint8_t SPI_CPOL;               /* POSSIBLE VALUES FROM @GPIO_OTYPES*/
 	uint8_t SPI_CPHASE;
 	uint8_t SPI_SSM;
+	uint8_t SPI_SSI;
 
 }SPI_Config_t;
 
@@ -95,6 +117,7 @@ void SPI_ClockControl(SPI_RegDef_t *pSPIx , uint8_t EnorDi);
  * Init and de-init
  */
 void SPI_Init(SPI_Handle_t *pSPIHandle);
+void SPI_Control(SPI_Handle_t *pSPIHandle,uint8_t EnorDi);
 void SPI_DeInit(SPI_Handle_t *pSPIHandle);
 /*
  * Read and write
@@ -108,6 +131,6 @@ void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority);
 void SPI_IRQHandling(SPI_Handle_t *pSPIHandle);
 
-
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName);
 
 #endif /* INC_STM32F407XX_SPI_DRIVER_H_ */
